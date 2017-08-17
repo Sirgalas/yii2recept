@@ -2,13 +2,14 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use \app\modules\recept\models\Recept;
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\ingredient\models\IngredientsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Ingredients';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="ingredients-index">
 
@@ -23,9 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'id_recept',
             'name',
 
             ['class' => 'yii\grid\ActionColumn'],

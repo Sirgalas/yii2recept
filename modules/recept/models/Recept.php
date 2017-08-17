@@ -2,16 +2,19 @@
 
 namespace app\modules\recept\models;
 
-use Yii;
 use app\modules\ingredient\models\Ingredients;
+use Yii;
+
 /**
  * This is the model class for table "recept".
  *
  * @property integer $id
+ * @property string $title
  * @property string $content
  */
 class Recept extends \yii\db\ActiveRecord
 {
+    public $idIngredients;
     /**
      * @inheritdoc
      */
@@ -26,15 +29,18 @@ class Recept extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['content'], 'required'],
-            [['content'], 'string', 'max' => 45],
+            [['title', 'content'], 'required'],
+            [['content'], 'string'],
+            [['title'], 'string', 'max' => 255],
+            
         ];
     }
 
-    public function getIngredients(){
-        return $this->hasMany(Ingredients::className(),['id_recept'=>'id']);
-    }
 
+    
+    public function getIngredients(){
+        return $this->hasMany(Ingredients::className(),['id'=>'id_ingridients'])->viaTable('ing_to_recept', ['id_rec' => 'id']);
+    }
     /**
      * @inheritdoc
      */
@@ -42,6 +48,7 @@ class Recept extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'title' => 'Title',
             'content' => 'Content',
         ];
     }

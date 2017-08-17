@@ -27,8 +27,8 @@ class Ingredients extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_recept', 'name'], 'required'],
-            [['id_recept'], 'integer'],
+            [['name'], 'required'],
+            [['name'], 'unique'],
             [['name'], 'string', 'max' => 255],
         ];
     }
@@ -40,7 +40,6 @@ class Ingredients extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'id_recept' => 'Id Recept',
             'name' => 'Name',
         ];
     }

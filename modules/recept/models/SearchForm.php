@@ -9,25 +9,33 @@
 namespace app\modules\recept\models;
 
 use yii\base\Model;
-
-class searchForm extends Model
+use app\modules\ingredient\models\Ingredients;
+class SearchForm extends Ingredients
 {
     public $ingredients;
 
     public function rules(){
         return[
-            ['ingredients','validateIngridients']
+            ['ingredients', function ($attribute, $params) {
+                if (count($this->attribute)<2) {
+                    $this->addError($attribute, 'Выберите больше ингредиентов.');
+                }
+                if (count($this->attribute)>5) {
+                    $this->addError($attribute, 'Нельзя выбрать больше 5 ингредиентов.');
+                }
+            }]
         ];
     }
 
 
-    public function validateIngridients()
+   /* public function validateIngridients()
     {
+        $this->addError('ingredients','test');
         if (count($this->ingredients)<2) {
             $this->addError('ingredients', 'Выберите больше ингредиентов.');
         }
         if (count($this->ingredients)>5) {
             $this->addError('ingredients', 'Нельзя выбрать больше 5 ингредиентов.');
         }
-    }
+    }*/
 }

@@ -18,7 +18,7 @@ class IngredientsSearch extends Ingredients
     public function rules()
     {
         return [
-            [['id', 'id_recept'], 'integer'],
+            [['id'], 'integer'],
             [['name'], 'safe'],
         ];
     }
@@ -60,7 +60,6 @@ class IngredientsSearch extends Ingredients
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'id_recept' => $this->id_recept,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);

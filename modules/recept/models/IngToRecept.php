@@ -20,6 +20,15 @@ class IngToRecept extends \yii\db\ActiveRecord
     {
         return 'ing_to_recept';
     }
+    
+    public function saveRec($arrModels,$id){
+        $bathArr=array();
+        foreach ($arrModels as $arrModel){
+            $bathArr[]=[$arrModel,$id];
+        }
+        return Yii::$app->db->createCommand()->batchInsert('ing_to_recept',['id_ingridients','id_rec'],$bathArr)->execute();
+        
+    }
 
     /**
      * @inheritdoc

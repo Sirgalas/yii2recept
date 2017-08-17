@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use \yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\recept\models\ReceptSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -23,10 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
             'content',
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

@@ -2,12 +2,17 @@
 
 namespace app\modules\recept\controllers;
 
+use app\modules\ingredient\models\Ingredients;
+use app\modules\recept\models\IngToRecept;
+use app\modules\recept\models\SearchForm;
 use Yii;
 use app\modules\recept\models\Recept;
 use app\modules\recept\models\ReceptSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 
 /**
  * ReceptController implements the CRUD actions for Recept model.
@@ -49,13 +54,22 @@ class ReceptController extends Controller
      */
     public function actionIndexSite()
     {
-        $searchModel = new ReceptSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams); 
-        
-
+        $ingredients=ArrayHelper::map(Ingredients::find()->asArray()->all(),'id','name');
+        $model=new SearchForm();
+        $recept=Recept::find()->with('ingredients');
+        $receptDataProvider = new ActiveDataProvider([
+            'query' => $recept,
+            'pagination' => [
+                'pageSize' => 24,
+            ],
+        ]);
+        if ($model->load(Yii::$app->request->post())){
+            return var_dump(Yii::$app->request->post());
+        }
         return $this->render('indexsite', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $receptDataProvider,
+            'ingredients'   =>$ingredients,
+            'model'         =>  $model
         ]);
     }
     
@@ -68,12 +82,17 @@ class ReceptController extends Controller
     public function actionCreate()
     {
         $model = new Recept();
+        $ingrediets=ArrayHelper::map(Ingredients::find()->asArray()->all(),'id','name');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $inToRec=new IngToRecept();
+            $post=Yii::$app->request->post();
+            $inToRec->saveRec($post['Recept']['idIngredients'],$model->id);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'ingrediets'=>$ingrediets
             ]);
         }
     }
@@ -87,12 +106,22 @@ class ReceptController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $value=array();
+        foreach ($model->ingredients as $ingredient){
+            $value[]=$ingredient->id;
+        }
+        $ingrediets=ArrayHelper::map(Ingredients::find()->asArray()->all(),'id','name');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $inToRec=new IngToRecept();
+            $post=Yii::$app->request->post();
+            $inToRec->saveRec($post['Recept']['idIngredients'],$model->id);
+            
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'ingrediets'=>$ingrediets,
+                'value' =>$value
             ]);
         }
     }
